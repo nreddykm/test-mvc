@@ -1,0 +1,84 @@
+<!doctype html>
+<html data-framework="vue">
+  <head>
+    <meta charset="utf-8">
+    <title>Todos</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='shortcut icon' type='image/png' href='static/favicon.png'/>
+    <link rel="stylesheet" href="static/index.css">
+    <style> [v-cloak] { display: none; } </style>
+    <script>
+
+    </script>
+  </head>
+  <body>
+    <section class="todoapp">
+      <div class="tabs">
+        <div @click="switchTab(0)" :class="{active:configs.tab_id==0}" class="tab grey" @dblclick="firebase_mode('demo')"></div>
+        <div @click="switchTab(1)" :class="{active:configs.tab_id==1}" class="tab red"></div>
+        <div @click="switchTab(2)" :class="{active:configs.tab_id==2}" class="tab orange"></div>
+        <div @click="switchTab(3)" :class="{active:configs.tab_id==3}" class="tab yellow"></div>
+        <div @click="switchTab(4)" :class="{active:configs.tab_id==4}" class="tab green"></div>
+        <div @click="switchTab(5)" :class="{active:configs.tab_id==5}" class="tab teal"></div>
+        <div @click="switchTab(6)" :class="{active:configs.tab_id==6}" class="tab blue"></div>
+        <div @click="switchTab(7)" :class="{active:configs.tab_id==7}" class="tab purple"></div>
+      </div>
+      <header class="header">
+        <!--<h1>todos</h1>-->
+        <input class="new-todo"
+          autofocus autocomplete="off"
+          placeholder="What needs to be done?"
+          v-model="newTodo"
+          @keyup.enter="addTodo">
+      </header>
+      <section class="main" v-show="todos.length" v-cloak>
+        <input class="toggle-all" type="checkbox" v-model="allDone" v-if="false">
+        <ul class="todo-list">
+          <li class="todo"
+            v-for="todo in filteredTodos"
+            :class="{completed: todo.completed, editing: todo == editedTodo}">
+            <div class="view">
+              <input class="toggle" type="checkbox" v-model="todo.completed">
+              <label @dblclick="editTodo(todo)">{{todo.title}}</label>
+              <button class="destroy" @click="removeTodo(todo)"></button>
+            </div>
+            <input class="edit" type="text"
+              v-model="todo.title"
+              v-todo-focus="todo == editedTodo"
+              @blur="doneEdit(todo)"
+              @keyup.enter="doneEdit(todo)"
+              @keyup.esc="cancelEdit(todo)">
+          </li>
+        </ul>
+      </section>
+      <footer class="footer" v-show="todos.length" v-cloak>
+        <span class="todo-count">
+          <strong v-text="remaining"></strong> {{remaining | pluralize 'item'}} left
+        </span>
+        <ul class="filters">
+          <li><a href="#/all" :class="{selected: visibility == 'all'}">All</a></li>
+          <li><a href="#/active" :class="{selected: visibility == 'active'}">Active</a></li>
+          <li><a href="#/completed" :class="{selected: visibility == 'completed'}">Completed</a></li>
+        </ul>
+        <button class="clear-completed" @click="removeCompleted" v-show="todos.length > remaining">
+          Clear completed
+        </button>
+      </footer>
+    </section>
+    <footer class="info">
+      <p v-if="configs.firebase" v-cloak>Connected to Firebase</p>
+      <p>Double-click to edit a todo</p>
+      <p>All the todos saved in local storage</p>
+      <p>Written by <a href="http://evanyou.me">Evan You</a>, Modified by <a href="http://antnf.com">Anthony Fu</a></p>
+      <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </footer>
+
+    <script src="static/firebase-config.js"></script>
+    <script src="static/firebase.js"></script>
+    <script src="static/vue.min.js"></script>
+    <script src="static/director.js"></script>
+    <script src="static/store.js"></script>
+    <script src="static/app.js"></script>
+    <script src="static/routes.js"></script>
+  </body>
+</html>
